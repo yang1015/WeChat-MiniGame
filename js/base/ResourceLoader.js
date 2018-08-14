@@ -5,6 +5,11 @@ import { Resources } from "./Resources.js";
 export class ResourceLoader {
     constructor(){
         this.map = new Map(Resources);
+        this.mapKeyToImageInstance(); // 将key对应的value 由url改为真正的image对象实例
+
+    }
+
+    mapKeyToImageInstance() {
         for (let [key, value] of this.map.entries()) {
             const image = new Image(); // == wx.createImage();
             image.src = value;
