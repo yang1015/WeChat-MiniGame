@@ -1,9 +1,31 @@
 
-import { Resource } from "./Resource.js";
+import { Resources } from "./Resources.js";
 
 // 资源文件加载器 确保 在所有图片都加载完成后 才渲染canvas
 export class ResourceLoader {
     constructor(){
+        this.map = new Map(Resources);
+        for (let [key, value] of this.map.entries()) {
+            const image = new Image(); // == wx.createImage();
+            image.src = value;
+            this.map.set(key, image); // 更新map键值对应。将原本的url替换成一个实体image
+        }
+    }
 
+    onLoaded(cb) {
+        let loadedCount = 0;
+        for (let value of this.map.values()) { // value是image
+            value.onload = () => { //onload是image的事件 全小写 不是自定义函数
+                loadedCount++;
+                if (loadedCount >= this.map.size) { //this.map直接指代了constructor里声明的map
+                    cb(this.map);
+                }
+            }
+        }
+    }
+
+    static create() {
+        // 静态工厂 直接使用func 不用new实例
+        return new ResourceLoader();
     }
 }

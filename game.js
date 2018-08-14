@@ -1,7 +1,7 @@
 import { Main } from "./Main.js"; //最好写成.js
 
 
-// new Main();
+new Main();
 // var canvas = document.querySelector('#cavans');
 // var context = canvas.getContext('2d');
 // context.fillStyle = 'lime';
