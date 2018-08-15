@@ -9,7 +9,6 @@ export class Director {
     constructor() {
         //console.log("director cons初始化")
         this.dataStore = DataStore.getInstance();
-        this.whatever = new Map(Resources);
     }
 
 
@@ -21,12 +20,11 @@ export class Director {
     }
 
     run() {
-        // 这个写法不知为何不行
-        // new Background(dataStore.ctx, dataStore.get('background')).draw();
-
-        // this.dataStore.get('background').draw(); // get返回的是background类生成的一个参数为bg-image实体的实例
-
-        const backgroundInstance = this.dataStore.get('background'); // 因为它是不变的
-        backgroundInstance.draw();
+        this.dataStore.get('background').draw();
+        this.dataStore.get('land').draw();
+        // requestAnimationFrame(() => this.dataStore.get('land').draw()); // request这个函数需要被循环调用的，这种写法等于只额外多调用了一次
+        let landMovingTimer = requestAnimationFrame(() => this.run()); // this永远指向类，箭头函数
+        //this.dataStore.put('landMovingTimer', landMovingTimer);
+        //cancelAnimationFrame(landMovingTimer); // 当游戏暂停或者停止之后 需要cancel掉这个timer
     }
 }

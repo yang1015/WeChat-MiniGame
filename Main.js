@@ -2,6 +2,7 @@ import {ResourceLoader} from "./js/base/ResourceLoader.js";
 import {Director} from "./js/Director.js";
 import {Background} from "./js/runtime/Background.js";
 import {DataStore} from "./js/base/DataStore.js";
+import {Land} from './js/runtime/Land.js';
 
 export class Main {
     constructor() {
@@ -49,9 +50,8 @@ export class Main {
                 // 正确写法 new Background(this.ctx, this.dataStore.res.get('background'))
                 // 简化后 1- 全局都使用DataStore中的那个ctx ctx不再需要被传来传去
                 //       2- 在Background里定义好了要get的'background'这个key, 直接返回的就是image实例，不需要这里传入再去get了
-                new Background()
-            );
-        // 这里如果把put的value写成image实体，那么在Director那里操作的时候 还缺少Main这里的ctx
+                new Background()) // 这里如果把put的value写成image实体，那么在Director那里操作的时候 还缺少Main这里的ctx
+            .put('land', new Land()); // 链式操作
 
         this.director.run(); // 把运行的逻辑 渲染的动作 都放在director里
     }

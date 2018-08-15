@@ -9,6 +9,7 @@ export class Sprite {
 
         this.dataStore = DataStore.getInstance();
         this.ctx = this.dataStore.ctx;
+        // this.a777 = '777'
 
         this.img = img;
         this.srcX = srcX;
@@ -23,10 +24,12 @@ export class Sprite {
 
     /* ()里的是默认参数 */
     draw(img = this.img,
+
          srcX = this.srcX,
          srcY = this.srcY,
          srcW = this.srcW,
          srcH = this.srcH,
+
          x = this.x,
          y = this.y,
          width = this.width,
@@ -34,10 +37,12 @@ export class Sprite {
 
         this.ctx.drawImage(
             img,
+
             srcX,
             srcY,
             srcW,
             srcH,
+
             x,
             y,
             width,
