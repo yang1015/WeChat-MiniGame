@@ -1,9 +1,6 @@
-import { Main } from "./Main.js"; //最好写成.js
+import { Main } from "./Main.js"; //最好写成.js 不然有的浏览器不认这个地址 说not found
 
 
 new Main();
-// var canvas = document.querySelector('#cavans');
-// var context = canvas.getContext('2d');
-// context.fillStyle = 'lime';
-// context.fillRect(0, 0, 200, 100);
+
 

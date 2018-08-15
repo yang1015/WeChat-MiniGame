@@ -2,14 +2,16 @@
 
 // 游戏的开始 逻辑
 
-import {DataStore} from "./base/DataStore.js";
-import {Background} from "./runtime/Background.js";
+import { DataStore } from "./base/DataStore.js";
+import { Resources } from "./base/Resources.js";
 
 export class Director {
     constructor() {
         //console.log("director cons初始化")
         this.dataStore = DataStore.getInstance();
+        this.whatever = new Map(Resources);
     }
+
 
     static getInstance() {
         if (!Director.instance) {

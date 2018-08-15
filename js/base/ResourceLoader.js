@@ -17,13 +17,14 @@ export class ResourceLoader {
         }
     }
 
-    onLoaded(cb) {
+    onLoaded(callback) {
         let loadedCount = 0;
         for (let value of this.map.values()) { // value是image
-            value.onload = () => { //onload是image的事件 全小写 不是自定义函数
+            /* onload事件在图片加载完成后立即执行; 是image的事件 全小写 不是自定义函数 */
+            value.onload = () => {
                 loadedCount++;
                 if (loadedCount >= this.map.size) { //this.map直接指代了constructor里声明的map
-                    cb(this.map);
+                    callback(this.map);
                 }
             }
         }

@@ -21,6 +21,7 @@ export class Sprite {
         this.height = height;
     }
 
+    /* ()里的是默认参数 */
     draw(img = this.img,
          srcX = this.srcX,
          srcY = this.srcY,
@@ -46,5 +47,7 @@ export class Sprite {
 
     static getImage(key) {
         return DataStore.getInstance().res.get(key);
+        // 在这里不能使用this.dataStore 因为调用static函数的时候，是不经过constructor的
+        // 所以等于是没有经过this.dataStore = DataStore.getInstance();这一步 所以对于static函数来说 不认识这个变量
     }
 }
