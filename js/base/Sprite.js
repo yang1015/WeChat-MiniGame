@@ -24,12 +24,10 @@ export class Sprite {
 
     /* ()里的是默认参数 */
     draw(img = this.img,
-
          srcX = this.srcX,
          srcY = this.srcY,
          srcW = this.srcW,
          srcH = this.srcH,
-
          x = this.x,
          y = this.y,
          width = this.width,
@@ -54,5 +52,13 @@ export class Sprite {
         return DataStore.getInstance().res.get(key);
         // 在这里不能使用this.dataStore 因为调用static函数的时候，是不经过constructor的
         // 所以等于是没有经过this.dataStore = DataStore.getInstance();这一步 所以对于static函数来说 不认识这个变量
+    }
+
+    static getRandonUpPencilY() {
+        return 400 * Math.random() + 1;
+    }
+
+    static getRandomDownPencilY() {
+        return 400 * Math.random() + 1;
     }
 }

@@ -1,4 +1,5 @@
 import {Sprite} from "../base/Sprite.js";
+import {DataStore} from "../base/DataStore.js";
 
 export class Land extends Sprite {
     constructor() {
@@ -12,12 +13,11 @@ export class Land extends Sprite {
         );
 
         this.landX = 0; // 地板的水平变化坐标
-        this.landMoveEveryTime = 2;  // 地板的移动速度
     }
 
     draw() {
         // console.log(this.a777); 在子类里可以取用使用父类的变量
-        this.landX = this.landX + this.landMoveEveryTime;
+        this.landX = this.landX + DataStore.getInstance().movingSpeed;;
         if (this.landX >= (this.img.width - window.innerWidth)) { //右边即将达到canvas的边界
             this.landX = 0;
         }

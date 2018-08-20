@@ -23,7 +23,12 @@ export class Director {
         this.dataStore.get('background').draw();
         this.dataStore.get('land').draw();
         // requestAnimationFrame(() => this.dataStore.get('land').draw()); // request这个函数需要被循环调用的，这种写法等于只额外多调用了一次
-        let landMovingTimer = requestAnimationFrame(() => this.run()); // this永远指向类，箭头函数
+        let landMovingTimer = requestAnimationFrame(() => this.run()); // this永远指向类，箭头函数 request类似于setTimeout
+        // 由浏览器决定的 不是我们来控制的 性能高于setTimeout和setInterval
+
+        // this.dataStore.get('pencilUp').draw();
+        // this.dataStore.get('pencilDown').draw();
+        //window.setTimeout(() => this.run(), 10) 虽然能跑
         //this.dataStore.put('landMovingTimer', landMovingTimer);
         //cancelAnimationFrame(landMovingTimer); // 当游戏暂停或者停止之后 需要cancel掉这个timer
     }
