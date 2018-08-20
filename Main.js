@@ -5,13 +5,15 @@ import {DataStore} from "./js/base/DataStore.js";
 import {Land} from './js/runtime/Land.js';
 import {UpPencil} from "./js/runtime/UpPencil.js";
 import {DownPencil} from "./js/runtime/DownPencil.js";
+import {Birds} from "./js/player/Birds.js";
 
 export class Main {
     constructor() {
         /* 声明当前类的变量 在类里其他的func里可以直接使用 */
 
         /* 初始化画布 */
-        this.canvas = document.querySelector('#canvas');
+        //this.canvas = document.querySelector('#canvas');
+        this.canvas = wx.createCanvas();
         this.ctx = this.canvas.getContext('2d'); //getContext("2d") 对象是内建的 HTML5 对象，拥有多种绘制路径、矩形、圆形、字符以及添加图像的方法。
 
         /* 初始化Main中所需要用到的其他类的实例 两个实例都为单例模式*/
@@ -39,7 +41,8 @@ export class Main {
         // 资源加载完成之后 需要给dataStore添加一些永远不变的值 在本次运行中始终保存
         this.dataStore.ctx = this.ctx;
         this.dataStore.res = map; // 存放在类中 key -> image instance
-        this.dataStore.movingSpeed = 2;
+        this.dataStore.movingSpeed = 2; // land和pencil的移动速度是相同的 所以直接写在datastore里
+        this.dataStore.isGameOver = true;
         this.init();
     }
 
@@ -56,7 +59,13 @@ export class Main {
                 new Background()) // 这里如果把put的value写成image实体，那么在Director那里操作的时候 还缺少Main这里的ctx
             .put('land', new Land())
             .put('pencilUp', new UpPencil())
-            .put('pencilDown', new DownPencil()); // 链式操作
+            .put('pencilDown', new DownPencil())
+            .put('pencils', [])
+            .put('birds', new Birds());
+        // 链式操作
+
+        // 先要创建第一组铅笔 再run
+        this.director.createPencilPairs();
 
         this.director.run(); // 把运行的逻辑 渲染的动作 都放在director里
     }

@@ -1,14 +1,15 @@
 import {Sprite} from "../base/Sprite.js";
 import {DataStore} from "../base/DataStore.js";
+import {Pencil} from "./Pencil.js";
 
-export class UpPencil extends Sprite {
-    constructor() {
+export class UpPencil extends Pencil {
 
+    constructor(top) {
 
         const image = Sprite.getImage('pencilUp');
         //const randomY = Sprite.getRandonUpPencilY();
 
-        super();
+        super(image, top);
         // 剪裁y需要产生随机数
         // super(image,
         //     0, randomY,
@@ -18,6 +19,11 @@ export class UpPencil extends Sprite {
         //     );
 
 
+    }
+
+    draw() {
+        this.y = this.top - this.height;
+        super.draw();
     }
 
 

@@ -1,18 +1,18 @@
 
 import {Sprite} from "../base/Sprite.js";
+import {Pencil} from "./Pencil.js";
 
-export class DownPencil extends Sprite{
+export class DownPencil extends Pencil{
 
-    constructor() {
+    constructor(top) {
         const image = Sprite.getImage('pencilDown');
-        super();
-        // let randomDownPencilY = Sprite.getRandomDownPencilY();
-        // super(
-        //     image,
-        //     0, 0,
-        //     image.width, 400,
-        //     30, 420,
-        //     image.width, randomDownPencilY
-        //     );
+        super(image, top);
+
+    }
+
+    draw() {
+        let gap = 1 / 5 * window.innerHeight;
+        this.y = this.top + gap;
+        super.draw();
     }
 }

@@ -4,7 +4,8 @@ import {DataStore} from "./DataStore.js";
 export class Sprite {
     // 本来constructor里传了ctx这个参数 但是考虑到ctx永久保存在了datastore里 就可以直接使用了
     constructor(img = null,
-                srcX = 0, srcY = 0, srcW = 0, srcH = 0, x = 0, y = 0, width = 0, height = 0) { // ES6可以设置默认值
+                srcX = 0, srcY = 0, srcW = 0, srcH = 0,
+                x = 0, y = 0, width = 0, height = 0) { // ES6可以设置默认值
         console.log("sprite constructor");
 
         this.dataStore = DataStore.getInstance();
@@ -54,11 +55,4 @@ export class Sprite {
         // 所以等于是没有经过this.dataStore = DataStore.getInstance();这一步 所以对于static函数来说 不认识这个变量
     }
 
-    static getRandonUpPencilY() {
-        return 400 * Math.random() + 1;
-    }
-
-    static getRandomDownPencilY() {
-        return 400 * Math.random() + 1;
-    }
 }
