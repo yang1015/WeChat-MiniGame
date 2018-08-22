@@ -42,7 +42,7 @@ export class Main {
         this.dataStore.ctx = this.ctx;
         this.dataStore.res = map; // 存放在类中 key -> image instance
         this.dataStore.movingSpeed = 2; // land和pencil的移动速度是相同的 所以直接写在datastore里
-        this.dataStore.isGameOver = true;
+        this.dataStore.isGameOver = false;
         this.init();
     }
 
@@ -58,15 +58,30 @@ export class Main {
                 //       2- 在Background里定义好了要get的'background'这个key, 直接返回的就是image实例，不需要这里传入再去get了
                 new Background()) // 这里如果把put的value写成image实体，那么在Director那里操作的时候 还缺少Main这里的ctx
             .put('land', new Land())
-            .put('pencilUp', new UpPencil())
-            .put('pencilDown', new DownPencil())
-            .put('pencils', [])
+            // .put('pencilUp', new UpPencil())
+            // .put('pencilDown', new DownPencil())
+            .put('pencils', []) // 用数组来维护一组铅笔
             .put('birds', new Birds());
         // 链式操作
 
-        // 先要创建第一组铅笔 再run
+        this.registerEvent();
+
+        /* 先要创建第一组铅笔 再run */
         this.director.createPencilPairs();
 
         this.director.run(); // 把运行的逻辑 渲染的动作 都放在director里
+    }
+
+    registerEvent() {
+        // 注册事件属于初始化 需要写在Main里
+        // this.canvas.addEventListener('touchstart', e=>{});
+        // wx.onTouchStart(e => { // 箭头函数 这样e指向的是Main类
+        this.canvas.addEventListener('touchstart', e => {
+            console.log("触摸")
+            e.preventDefault(); // 阻止事件冒泡
+            // console.log(this) // 这里的this 打印出来是Main类
+            this.director.birdsTouchEvent();
+
+        })
     }
 }

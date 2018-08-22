@@ -53,26 +53,27 @@ export class Birds extends Sprite {
 
         this.index = 0;
         this.count = 0; // 循环小鸟的位数 0->1->2 三个状态 整数
-        this.time = 0;
+        this.flyingTime = 0;
     }
 
     draw() {
         // 默认一秒钟刷新60次
         const speed = 0.2; // 切换三只小鸟的速度
         this.count = this.count + speed;
-        this.count = this.count > 2 ? 0 : this.count;
+        this.count = this.count > 2 ? 0 : this.count; // 小鸟的index最多只可能是2，如果是2了就切回0的状态
         this.index = Math.floor(this.count); // 四舍五入 减速器的作用
         //console.log(this.index)
 
         const gravity = 0.98 / 2.4;
-        const offsetUp = 30;
-        const offsetY = (gravity * this.time * (this.time - offsetUp)) / 2;
-
+        const offsetUp = 35; // 向上偏移一下
+        const offsetY = gravity * (this.flyingTime * (this.flyingTime - offsetUp)) / 2;
+        // 物理公式 h = 1/2 * gt^2;
 
         for (let i = 0; i <= 2; i++) {
             this.birdsPositionY[i] = this.y[i] + offsetY;
         }
-        this.time++;
+
+        this.flyingTime++; // 时间越长 自由落体下落的height越大，所以当用户触摸屏幕的时候，要停止自由落体的进行，将time置零即可
 
 
         super.draw(

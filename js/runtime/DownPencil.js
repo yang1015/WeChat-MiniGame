@@ -1,8 +1,7 @@
-
 import {Sprite} from "../base/Sprite.js";
 import {Pencil} from "./Pencil.js";
 
-export class DownPencil extends Pencil{
+export class DownPencil extends Pencil {
 
     constructor(top) {
         const image = Sprite.getImage('pencilDown');

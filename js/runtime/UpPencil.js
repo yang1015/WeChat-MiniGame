@@ -5,27 +5,16 @@ import {Pencil} from "./Pencil.js";
 export class UpPencil extends Pencil {
 
     constructor(top) {
-
         const image = Sprite.getImage('pencilUp');
-        //const randomY = Sprite.getRandonUpPencilY();
-
-        super(image, top);
-        // 剪裁y需要产生随机数
-        // super(image,
-        //     0, randomY,
-        //     image.width, image.height,
-        //     30, 0,
-        //     image.width, image.height
-        //     );
-
-
+        super(image, top); // 传top是为了计算UpPencil的y
     }
 
     draw() {
+        // 从坐标轴的位置来看y一定是负的 所以-y就是正的
+        // 那么-y + top = height => y = top - height
+
         this.y = this.top - this.height;
         super.draw();
     }
-
-
 
 }
