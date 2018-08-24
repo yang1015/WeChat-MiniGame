@@ -1,9 +1,8 @@
-
-import { Resources } from "./Resources.js";
+import {Resources} from "./Resources.js";
 
 // 资源文件加载器 确保 在所有图片都加载完成后 才渲染canvas
 export class ResourceLoader {
-    constructor(){
+    constructor() {
         this.map = new Map(Resources);
         this.mapKeyToImageInstance(); // 将key对应的value 由url改为真正的image对象实例
 
@@ -11,8 +10,9 @@ export class ResourceLoader {
 
     mapKeyToImageInstance() {
         for (let [key, value] of this.map.entries()) {
-           // const image = new Image(); // == wx.createImage();
-             const image = wx.createImage();
+            // const image = new Image(); // == wx.createImage();
+
+            const image = wx.createImage();
             image.src = value;
             this.map.set(key, image); // 更新map键值对应。将原本的url替换成一个实体image
         }

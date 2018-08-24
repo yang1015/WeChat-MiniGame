@@ -16,8 +16,8 @@ export class Director {
     createPencilPairs() {
         // 对笔尖高度的限制
         // console.log("创建铅笔");
-        const minTop = window.innerHeight / 8;
-        const maxTop = window.innerHeight / 2;
+        const minTop = DataStore.getInstance().canvas.height / 8;
+        const maxTop = DataStore.getInstance().canvas.height / 2;
         const top = minTop + Math.random() * (maxTop - minTop); // 取随机值
         this.dataStore.get('pencils').push(new UpPencil(top));
         this.dataStore.get('pencils').push(new DownPencil(top));
@@ -26,6 +26,7 @@ export class Director {
     drawPencils() {
 
         const pencils = this.dataStore.get('pencils'); // 获取dataStore里的pencils数组
+        const score = this.dataStore.get('score');
         /* 对要渲染的铅笔数组进行操作 */
 
         /* 1- 销毁越界铅笔 */
@@ -33,10 +34,11 @@ export class Director {
             && pencils.length == 4) { // 避免第一次生成的两支铅笔直接被推出 数组为空了。所以规定当4支的时候 才推出前两支铅笔
             pencils.shift(); // 把数组的第1个元素(up pencil)推出数组 并且数组长度-1
             pencils.shift(); // 把数组的第2个元素(down pencil)推出数组 并且数组长度-1
+            score.isGraded = true;
         }
 
         /* 2- 创建新的铅笔对 补成两组4只 */
-        if (pencils[0].x <= (window.innerWidth - pencils[0].width) / 2
+        if (pencils[0].x <= (DataStore.getInstance().canvas.width - pencils[0].width) / 2
             && pencils.length == 2) { // 只剩下一组铅笔了
             this.createPencilPairs();
         }
@@ -48,95 +50,104 @@ export class Director {
     }
 
     /* 判断小鸟是否撞击了地板和铅笔*/
-    check() {
+    checkCollision() {
         /* 是否撞击地板 */
         // 看小鸟移动到的y坐标 - 小鸟的height 是否等于 land的y坐标
         // console.log("here")
         const birds = this.dataStore.get('birds');
         const land = this.dataStore.get('land');
         const pencils = this.dataStore.get('pencils');
+        const score = this.dataStore.get('score');
 
         if (birds.birdsPositionY[0] + birds.birdsPositionHeight[0] >= land.y) {
             // console.log("撞击了");
-            this.dataStore.isGameOver = true;
+            this.isGameOver = true;
             return;
         }
 
-        // const birdsBorder = {
-        //     top: birds.y[0],
-        //     bottom: birds.birdsPositionY[0] + birds.birdsPositionHeight[0],
-        //     left: birds.birdsPositionX[0],
-        //     right: birds.birdsPositionX[0] + birds.birdsPositionWidth[0]
-        // }
+        const birdsBorder = {
+            top: birds.birdsPositionY[0],
+            bottom: birds.birdsPositionY[0] + birds.birdsPositionHeight[0],
+            left: birds.birdsPositionX[0],
+            right: birds.birdsPositionX[0] + birds.birdsPositionWidth[0]
+        }
 
-        for (let i = 0; i < pencils.length; i++) {
-            let currentPencil = pencils[i];
-            if (Director.ifBirdsHitPencils(birds, currentPencil)) {
-                console.log("check: " + this.dataStore.isGameOver)
-                this.dataStore.isGameOver = true; // 游戏结束
-                return;
-            }
-            // const currentPencilBorder = {
-            //     top: currentPencil.y,
-            //     bottom: currentPencil.y + currentPencil.height,
-            //     left: currentPencil.x,
-            //     right: currentPencil.x + currentPencil.width
-            // }
-            // if (this.ifBirdsHitPencils(birdsBorder, currentPencilBorder)) {
-            //     console.log("hit");
-            //     this.dataStore.isGameOver = true;
+        const len = pencils.length;
+        for (let i = 0; i < len; i++) {
+            const currentPencil = pencils[i];
+            // if (Director.ifBirdsHitPencils(birds, pencils[i])) {
+            //     console.log("撞到了");
+            //     console.log("check: " + this.isGameOver)
+            //     this.isGameOver = true; // 游戏结束
             //     return;
             // }
 
+            const currentPencilBorder = {
+                top: currentPencil.y,
+                bottom: currentPencil.y + currentPencil.height,
+                left: currentPencil.x,
+                right: currentPencil.x + currentPencil.width
+            }
+            if (Director.ifBirdsHitPencils(birdsBorder, currentPencilBorder)) {
+
+                this.isGameOver = true;
+                return;
+            }
+
+        }
+
+        /* 分数逻辑 */
+        if (birds.birdsPositionWidth[0] > pencils[0].x + pencils[0].width
+        && score.isGraded) {
+            // 越过铅笔 左侧超过右侧
+            // 刷新的帧数很多 重复被计数
+            score.isGraded = false; // 一越过铅笔 马上关闭加分功能
+            score.score++;
         }
     }
 
 
-    // ifBirdsHitPencils(bird, pencil) {
-    static ifBirdsHitPencils(birds, currentPencil) {
+    static ifBirdsHitPencils(bird, pencil) {
+    // static ifBirdsHitPencils(birds, currentPencil) {
         let res = false;
-        if (birds.y[0] > currentPencil.y + currentPencil.height // 小鸟的上和铅笔的下
-            || birds.birdsPositionY[0] + birds.birdsPositionHeight[0] < currentPencil.y // 小鸟的下和铅笔的上
-            || birds.birdsPositionX[0] > currentPencil.x + currentPencil.width
-            || birds.birdsPositionX[0] + birds.birdsPositionWidth[0] > currentPencil.x // 小鸟的右和铅笔的左
-        ) {
-            console.log("触碰了");
-            res = true;
-        }
-        // if (bird.top >= pencil.bottom
-        // || bird.bottom <= pencil.top
-        // || bird.right <= pencil.left
-        // || bird.left >= pencil.right) {
-        //     console.log("撞击了")
+
+        // if (birds.y[0] >= currentPencil.y + currentPencil.height || // 小鸟的上和铅笔的下
+        //     birds.birdsPositionY[0] + birds.birdsPositionHeight[0] <= currentPencil.y || // 小鸟的下和铅笔的上
+        //     birds.birdsPositionX[0] >= currentPencil.x + currentPencil.width ||
+        //     birds.birdsPositionX[0] + birds.birdsPositionWidth[0] >= currentPencil.x) {// 小鸟的右和铅笔的左
+        //     console.log("触碰了");
         //     res = true;
         // }
+        if (bird.top >= pencil.bottom
+        || bird.bottom <= pencil.top
+        || bird.right <= pencil.left
+        || bird.left >= pencil.right) {
+            res = true;
+        }
 
         return !res;
 
     }
 
     birdsTouchEvent() {
-        console.log('向上飞')
         for (let i = 0; i <= 2; i++) {
             this.dataStore.get('birds').y[i]
-                = this.dataStore.get('birds').birdsPositionY[i] + 20;
+                = this.dataStore.get('birds').birdsPositionY[i] + 30;
         }
 
         this.dataStore.get('birds').flyingTime = 0;
     }
 
     run() {
+        this.checkCollision();
 
-        this.check();
-        console.log("after check")
-
-        console.log("this.dataStore.isGameOver: " + this.dataStore.isGameOver)
-        if (!this.dataStore.isGameOver) {
-            console.log("游戏开始或者进行中")
+        if (!this.isGameOver) {
+            //console.log("游戏开始或者进行中")
             this.dataStore.get('background').draw();
 
             this.drawPencils();
             this.dataStore.get('land').draw();
+            this.dataStore.get('score').draw();
             this.dataStore.get('birds').draw();
             // requestAnimationFrame(() => this.dataStore.get('land').draw()); // request这个函数需要被循环调用的，这种写法等于只额外多调用了一次
             let movingTimer = requestAnimationFrame(() => this.run()); // this永远指向类，箭头函数 request类似于setTimeout
@@ -144,12 +155,17 @@ export class Director {
             this.dataStore.put('movingTimer', movingTimer);
             // this.dataStore.get('pencilUp').draw();
             // this.dataStore.get('pencilDown').draw();
-            //window.setTimeout(() => this.run(), 10) 虽然能跑
+            //DataStore.getInstance().canvas.setTimeout(() => this.run(), 10) 虽然能跑
             //this.dataStore.put('landMovingTimer', landMovingTimer);
 
         } else {
+            wx.stopBackgroundAudio();
+            this.dataStore.get('startButton').draw();
             cancelAnimationFrame(this.dataStore.get('movingTimer')); // 当游戏暂停或者停止之后 需要cancel掉这个timer
             this.dataStore.destroy();
+            wx.triggerGC(); // 垃圾回收
+
+
             console.log("游戏结束");
         }
     }

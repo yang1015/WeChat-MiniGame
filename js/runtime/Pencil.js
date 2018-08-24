@@ -11,15 +11,16 @@ export class Pencil extends Sprite {
             0, 0,
             image.width, image.height,
             // 下面这条线的位置在屏幕的右边 看不到的位置
-            window.innerWidth, 0,
+            DataStore.getInstance().canvas.width, 0,
             image.width, image.height
         );
 
         this.top = top;
+        this.movingSpeed = DataStore.getInstance().movingSpeed;
     }
 
     draw() {
-        this.x = this.x - DataStore.getInstance().movingSpeed;
+        this.x = this.x - this.movingSpeed;
 
         super.draw(
             this.img,

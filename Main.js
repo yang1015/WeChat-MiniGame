@@ -6,6 +6,8 @@ import {Land} from './js/runtime/Land.js';
 import {UpPencil} from "./js/runtime/UpPencil.js";
 import {DownPencil} from "./js/runtime/DownPencil.js";
 import {Birds} from "./js/player/Birds.js";
+import {StartButton} from "./js/player/StartButton.js";
+import {Score} from "./js/player/Score.js";
 
 export class Main {
     constructor() {
@@ -39,17 +41,19 @@ export class Main {
     /* ResourceLoader里的callback函数 图片加载完成后执行 */
     onResourcesFirstLoaded(map) {
         // 资源加载完成之后 需要给dataStore添加一些永远不变的值 在本次运行中始终保存
+        DataStore.getInstance().canvas = this.canvas;
         this.dataStore.ctx = this.ctx;
         this.dataStore.res = map; // 存放在类中 key -> image instance
         this.dataStore.movingSpeed = 2; // land和pencil的移动速度是相同的 所以直接写在datastore里
-        this.dataStore.isGameOver = false;
         this.init();
+        this.playBackgroundMusic();
     }
 
     /* 初始化背景 */
     init() {
         // 将bg放进dataStore的简直配对中 作为value的不是image实体
         // 而是直接将images实体拿去给background实例化了一遍，这样如果要draw 直接.draw()即可
+        this.director.isGameOver = false; // 放在这里才能点击屏幕重新开始
         this.dataStore
             .put('background',
                 // this.ctx, this.dataStore.res.get('background')
@@ -61,7 +65,9 @@ export class Main {
             // .put('pencilUp', new UpPencil())
             // .put('pencilDown', new DownPencil())
             .put('pencils', []) // 用数组来维护一组铅笔
-            .put('birds', new Birds());
+            .put('birds', new Birds())
+            .put('startButton', new StartButton())
+            .put('score', new Score());
         // 链式操作
 
         this.registerEvent();
@@ -76,12 +82,22 @@ export class Main {
         // 注册事件属于初始化 需要写在Main里
         // this.canvas.addEventListener('touchstart', e=>{});
         // wx.onTouchStart(e => { // 箭头函数 这样e指向的是Main类
-        this.canvas.addEventListener('touchstart', e => {
-            console.log("触摸")
-            e.preventDefault(); // 阻止事件冒泡
-            // console.log(this) // 这里的this 打印出来是Main类
-            this.director.birdsTouchEvent();
-
+        wx.onTouchStart(() => {
+            if (this.director.isGameOver) {
+                // 游戏开始
+                this.init();
+            } else {
+                // 游戏结束
+                this.director.birdsTouchEvent();
+            }
         })
     }
+
+    playBackgroundMusic() {
+        const bgm= wx.createInnerAudioContext();
+        bgm.autoplay = true;
+        bgm.loop = true;
+        bgm.src = 'res/moonstar.mp3';
+    }
+
 }

@@ -1,4 +1,5 @@
 import {Sprite} from "../base/Sprite.js";
+import {DataStore} from "../base/DataStore.js";
 
 export class Birds extends Sprite {
     constructor() {
@@ -20,6 +21,7 @@ export class Birds extends Sprite {
             9 + 34 + 18 + 34 + 18
         ]
 
+
         this.clippingTopLeftY = [
             10, 10, 10
         ]
@@ -38,8 +40,8 @@ export class Birds extends Sprite {
 
         /* 小鸟初始放置位置 */
 
-        this.birdPositionX = window.innerWidth / 4;
-        this.birdPositionY = window.innerHeight / 2; // 垂直居中
+        this.birdPositionX = DataStore.getInstance().canvas.width / 4;
+        this.birdPositionY = DataStore.getInstance().canvas.height / 2; // 垂直居中
         this.birdPositionWidth = 34;
         this.birdPositionHeight = 24; // 根据前一个开始位置来定的相对位置
 
@@ -65,7 +67,7 @@ export class Birds extends Sprite {
         //console.log(this.index)
 
         const gravity = 0.98 / 2.4;
-        const offsetUp = 35; // 向上偏移一下
+        const offsetUp = 30; // 向上偏移一下
         const offsetY = gravity * (this.flyingTime * (this.flyingTime - offsetUp)) / 2;
         // 物理公式 h = 1/2 * gt^2;
 

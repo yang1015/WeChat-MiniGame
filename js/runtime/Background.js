@@ -6,6 +6,7 @@ export class Background extends Sprite {
     constructor() {
 
         const image = Sprite.getImage('background');
+        const canvas = DataStore.getInstance().canvas;
 
         /* super之上不可以使用类实例的方法 禁止this关键字; 但是可以直接用类去访问*/
         /* super是调用父类的构造方法 将数据传给父类 */
@@ -14,7 +15,7 @@ export class Background extends Sprite {
             0, 0, // 剪裁开始位置
             image.width, image.height, // 剪裁结束位置
             0, 0, // 左上角跟canvas的左上角重合
-            window.innerWidth, window.innerHeight // 放置的右下角的结束位置
+            DataStore.getInstance().canvas.width, DataStore.getInstance().canvas.height // 放置的右下角的结束位置
         );
         // console.log("bg after super")
     }
