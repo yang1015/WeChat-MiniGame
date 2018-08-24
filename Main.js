@@ -97,7 +97,11 @@ export class Main {
         const bgm= wx.createInnerAudioContext();
         bgm.autoplay = true;
         bgm.loop = true;
-        bgm.src = 'res/moonstar.mp3';
+        bgm.src = 'res/bgm.mp3';
+
+        // wx.playBackgroundAudio({
+        //     dataUrl: 'res/moonstar.mp3'
+        // })
     }
 
 }

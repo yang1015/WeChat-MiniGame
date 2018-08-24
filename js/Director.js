@@ -98,7 +98,7 @@ export class Director {
 
         /* 分数逻辑 */
         if (birds.birdsPositionWidth[0] > pencils[0].x + pencils[0].width
-        && score.isGraded) {
+            && score.isGraded) {
             // 越过铅笔 左侧超过右侧
             // 刷新的帧数很多 重复被计数
             score.isGraded = false; // 一越过铅笔 马上关闭加分功能
@@ -108,7 +108,7 @@ export class Director {
 
 
     static ifBirdsHitPencils(bird, pencil) {
-    // static ifBirdsHitPencils(birds, currentPencil) {
+        // static ifBirdsHitPencils(birds, currentPencil) {
         let res = false;
 
         // if (birds.y[0] >= currentPencil.y + currentPencil.height || // 小鸟的上和铅笔的下
@@ -119,9 +119,9 @@ export class Director {
         //     res = true;
         // }
         if (bird.top >= pencil.bottom
-        || bird.bottom <= pencil.top
-        || bird.right <= pencil.left
-        || bird.left >= pencil.right) {
+            || bird.bottom <= pencil.top
+            || bird.right <= pencil.left
+            || bird.left >= pencil.right) {
             res = true;
         }
 
@@ -159,7 +159,20 @@ export class Director {
             //this.dataStore.put('landMovingTimer', landMovingTimer);
 
         } else {
-            wx.stopBackgroundAudio();
+            //wx.stopBackgroundAudio();
+            var res = {
+                success: function(){
+                    console.log("振动成功");
+                },
+                fail: function() {
+                    console.log("振动失败");
+                },
+                complete: function() {
+                    console.log("振动完成");
+                }
+            }
+
+            wx.vibrateLong(res);
             this.dataStore.get('startButton').draw();
             cancelAnimationFrame(this.dataStore.get('movingTimer')); // 当游戏暂停或者停止之后 需要cancel掉这个timer
             this.dataStore.destroy();
