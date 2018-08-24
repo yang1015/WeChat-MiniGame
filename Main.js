@@ -45,8 +45,8 @@ export class Main {
         this.dataStore.ctx = this.ctx;
         this.dataStore.res = map; // 存放在类中 key -> image instance
         this.dataStore.movingSpeed = 2; // land和pencil的移动速度是相同的 所以直接写在datastore里
-        this.init();
         this.playBackgroundMusic();
+        this.init();
     }
 
     /* 初始化背景 */
@@ -94,14 +94,14 @@ export class Main {
     }
 
     playBackgroundMusic() {
+
         const bgm= wx.createInnerAudioContext();
         bgm.autoplay = true;
         bgm.loop = true;
         bgm.src = 'res/bgm2.mp3';
+        this.dataStore.put('bgm', bgm);
 
-        // wx.playBackgroundAudio({
-        //     dataUrl: 'res/moonstar.mp3'
-        // })
+
     }
 
 }

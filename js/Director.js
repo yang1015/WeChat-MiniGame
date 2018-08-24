@@ -132,7 +132,7 @@ export class Director {
     birdsTouchEvent() {
         for (let i = 0; i <= 2; i++) {
             this.dataStore.get('birds').y[i]
-                = this.dataStore.get('birds').birdsPositionY[i] + 30;
+                = this.dataStore.get('birds').birdsPositionY[i];
         }
 
         this.dataStore.get('birds').flyingTime = 0;
@@ -142,6 +142,7 @@ export class Director {
         this.checkCollision();
 
         if (!this.isGameOver) {
+            this.dataStore.get('bgm').play();
             //console.log("游戏开始或者进行中")
             this.dataStore.get('background').draw();
 
@@ -173,6 +174,9 @@ export class Director {
             }
 
             wx.vibrateLong(res);
+            console.log(this.dataStore.get('bgm'));
+            this.dataStore.get('bgm').stop();
+
             this.dataStore.get('startButton').draw();
             cancelAnimationFrame(this.dataStore.get('movingTimer')); // 当游戏暂停或者停止之后 需要cancel掉这个timer
             this.dataStore.destroy();
