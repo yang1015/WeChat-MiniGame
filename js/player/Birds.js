@@ -39,18 +39,19 @@ export class Birds extends Sprite {
         ]
 
         /* 小鸟初始放置位置 */
-
         this.birdPositionX = DataStore.getInstance().canvas.width / 4;
         this.birdPositionY = DataStore.getInstance().canvas.height / 2; // 垂直居中
         this.birdPositionWidth = 34;
         this.birdPositionHeight = 24; // 根据前一个开始位置来定的相对位置
 
+        /* 三只小鸟的分别放置位置数组 */
         this.birdsPositionX = [this.birdPositionX, this.birdPositionX, this.birdPositionX];
         this.birdsPositionY = [this.birdPositionY, this.birdPositionY, this.birdPositionY];
         this.birdsPositionWidth = [this.birdPositionWidth, this.birdPositionWidth, this.birdPositionWidth];
         this.birdsPositionHeight = [this.birdPositionHeight, this.birdPositionHeight, this.birdPositionHeight];
 
-        // 小鸟在飞的时候其实只有y在移动 Sprite里的y
+
+        // 小鸟在飞的时候其实只有y在移动 设置的是父类Sprite里的y
         this.y = [this.birdPositionY, this.birdPositionY, this.birdPositionY];
 
         this.index = 0;

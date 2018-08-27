@@ -3,7 +3,6 @@
 // 游戏的开始 逻辑
 
 import {DataStore} from "./base/DataStore.js";
-import {Resources} from "./base/Resources.js";
 import {UpPencil} from "./runtime/UpPencil.js";
 import {DownPencil} from "./runtime/DownPencil.js";
 
@@ -15,12 +14,14 @@ export class Director {
 
     createPencilPairs() {
         // 对笔尖高度的限制
-        // console.log("创建铅笔");
         const minTop = DataStore.getInstance().canvas.height / 8;
         const maxTop = DataStore.getInstance().canvas.height / 2;
         const top = minTop + Math.random() * (maxTop - minTop); // 取随机值
-        this.dataStore.get('pencils').push(new UpPencil(top));
-        this.dataStore.get('pencils').push(new DownPencil(top));
+        const gap = parseInt(DataStore.getInstance().canvas.height * 0.02 + 10) * Math.random() + 120;
+
+        /* top是UpPencil实际在画布里的长度，gap是上下铅笔之间的间距 */
+        this.dataStore.get('pencils').push(new UpPencil(top, gap));
+        this.dataStore.get('pencils').push(new DownPencil(top, gap));
     }
 
     drawPencils() {
@@ -50,7 +51,7 @@ export class Director {
     }
 
     /* 判断小鸟是否撞击了地板和铅笔*/
-    checkCollision() {
+    checkIfHit() {
         /* 是否撞击地板 */
         // 看小鸟移动到的y坐标 - 小鸟的height 是否等于 land的y坐标
         // console.log("here")
@@ -139,51 +140,45 @@ export class Director {
     }
 
     run() {
-        this.checkCollision();
 
-        if (!this.isGameOver) {
-            this.dataStore.get('bgm').play();
-            //console.log("游戏开始或者进行中")
+        this.checkIfHit(); // 判断有没有碰撞 并更新isGameOver的状态
+
+        let movingTimer; // 定时刷新器
+
+        /* 画面不停地跟着浏览器的刷新速率被重绘 */
+        if (!this.isGameOver) { // 游戏没有结束
+
+            this.dataStore.get('bgm').play(); // 开始播放或者继续播放
             this.dataStore.get('background').draw();
-
             this.drawPencils();
             this.dataStore.get('land').draw();
             this.dataStore.get('score').draw();
             this.dataStore.get('birds').draw();
-            // requestAnimationFrame(() => this.dataStore.get('land').draw()); // request这个函数需要被循环调用的，这种写法等于只额外多调用了一次
-            let movingTimer = requestAnimationFrame(() => this.run()); // this永远指向类，箭头函数 request类似于setTimeout
-            // 由浏览器决定的 不是我们来控制的 性能高于setTimeout和setInterval
-            this.dataStore.put('movingTimer', movingTimer);
-            // this.dataStore.get('pencilUp').draw();
-            // this.dataStore.get('pencilDown').draw();
-            //DataStore.getInstance().canvas.setTimeout(() => this.run(), 10) 虽然能跑
-            //this.dataStore.put('landMovingTimer', landMovingTimer);
+
+            /* this永远指向类，箭头函数
+               requestAnimationFrame类似于setTimeout
+               但是requestAnimationFrame的刷新速率由浏览器决定的 不是我们来控制的 性能高于setTimeout和setInterval
+            */
+            movingTimer = requestAnimationFrame(() => this.run());
+            this.dataStore.put('movingTimer', movingTimer);  // 1- 更新timer; 2- 方便else时cancel
 
         } else {
-            //wx.stopBackgroundAudio();
             var res = {
-                success: function(){
+                success: function () {
                     console.log("振动成功");
                 },
-                fail: function() {
+                fail: function () {
                     console.log("振动失败");
-                },
-                complete: function() {
-                    console.log("振动完成");
                 }
             }
 
-            wx.vibrateLong(res);
-            console.log(this.dataStore.get('bgm'));
+            wx.vibrateLong(res); // 长振动
             this.dataStore.get('bgm').stop();
-
             this.dataStore.get('startButton').draw();
             cancelAnimationFrame(this.dataStore.get('movingTimer')); // 当游戏暂停或者停止之后 需要cancel掉这个timer
             this.dataStore.destroy();
             wx.triggerGC(); // 垃圾回收
-
-
-            console.log("游戏结束");
+            console.log("游戏结束")
         }
     }
 

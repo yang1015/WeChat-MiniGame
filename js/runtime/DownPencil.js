@@ -1,18 +1,17 @@
 import {Sprite} from "../base/Sprite.js";
 import {Pencil} from "./Pencil.js";
-import {DataStore} from "../base/DataStore.js";
 
 export class DownPencil extends Pencil {
 
-    constructor(top) {
+    constructor(top, gap) {
         const image = Sprite.getImage('pencilDown');
-        super(image, top);
+        super(image, top, gap);
 
     }
 
     draw() {
-        let gap = 1 / 5 * DataStore.getInstance().canvas.height;
-        this.y = this.top + gap;
+        this.y = this.top + this.gap; // this.top和this.gap都现在本类里找 没有就追溯到父亲
+        // 在这里修改了父类的y
         super.draw();
     }
 }

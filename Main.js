@@ -34,6 +34,7 @@ export class Main {
          *  2- 不应该this.loader.map去获取 因为RL在初始化后还做了一个转换，将map value重新设置成了Image Instance instead of src
         */
 
+
         loader.onLoaded(mapFromLoadedFunction => this.onResourcesFirstLoaded(mapFromLoadedFunction));
         // map是所有图片和mp3的资源集合
         // 这里因为已经有了loader的实例对象所以可以直接调用它constructor里的map了
@@ -42,18 +43,17 @@ export class Main {
     /* ResourceLoader里的callback函数 图片加载完成后执行 */
     onResourcesFirstLoaded(map) {
         // 资源加载完成之后 需要给dataStore添加一些永远不变的值 在本次运行中始终保存
-        DataStore.getInstance().canvas = this.canvas;
+        this.dataStore.canvas = this.canvas;
         this.dataStore.ctx = this.ctx;
         this.dataStore.res = map; // 存放在类中 key -> image instance
         this.dataStore.movingSpeed = 2; // land和pencil的移动速度是相同的 所以直接写在datastore里
-        this.playBackgroundMusic();
-        this.init();
 
-        // const examples = new ApiExample();
-        // examples.httpExample();
+        this.playBackgroundMusic(); // 新建音乐实例并播放
+
+        this.init();
     }
 
-    /* 初始化背景 */
+    /* 初始化 */
     init() {
         // 将bg放进dataStore的简直配对中 作为value的不是image实体
         // 而是直接将images实体拿去给background实例化了一遍，这样如果要draw 直接.draw()即可
@@ -68,16 +68,17 @@ export class Main {
             .put('land', new Land())
             // .put('pencilUp', new UpPencil())
             // .put('pencilDown', new DownPencil())
-            .put('pencils', []) // 用数组来维护一组铅笔
+            .put('pencils', []) // 用数组来维护两组铅笔 后面先push第一组
             .put('birds', new Birds())
             .put('startButton', new StartButton())
             .put('score', new Score());
         // 链式操作
 
-        this.registerEvent();
-
         /* 先要创建第一组铅笔 再run */
         this.director.createPencilPairs();
+
+        /* 全局注册事件 */
+        this.registerEvent();
 
         this.director.run(); // 把运行的逻辑 渲染的动作 都放在director里
     }
@@ -98,14 +99,11 @@ export class Main {
     }
 
     playBackgroundMusic() {
-
-        const bgm= wx.createInnerAudioContext();
+        const bgm = wx.createInnerAudioContext();
         bgm.autoplay = true;
         bgm.loop = true;
         bgm.src = 'res/bgm2.mp3';
         this.dataStore.put('bgm', bgm);
-
-
     }
 
 }
