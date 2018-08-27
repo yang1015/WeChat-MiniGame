@@ -5,13 +5,11 @@ export class ResourceLoader {
     constructor() {
         this.map = new Map(Resources);
         this.mapKeyToImageInstance(); // 将key对应的value 由url改为真正的image对象实例
-
     }
 
     mapKeyToImageInstance() {
         for (let [key, value] of this.map.entries()) {
             // const image = new Image(); // == wx.createImage();
-
             const image = wx.createImage();
             image.src = value;
             this.map.set(key, image); // 更新map键值对应。将原本的url替换成一个实体image

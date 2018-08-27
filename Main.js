@@ -8,6 +8,7 @@ import {DownPencil} from "./js/runtime/DownPencil.js";
 import {Birds} from "./js/player/Birds.js";
 import {StartButton} from "./js/player/StartButton.js";
 import {Score} from "./js/player/Score.js";
+import {ApiExample} from "./js/ApiExample.js";
 
 export class Main {
     constructor() {
@@ -47,6 +48,9 @@ export class Main {
         this.dataStore.movingSpeed = 2; // land和pencil的移动速度是相同的 所以直接写在datastore里
         this.playBackgroundMusic();
         this.init();
+
+        // const examples = new ApiExample();
+        // examples.httpExample();
     }
 
     /* 初始化背景 */
