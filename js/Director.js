@@ -52,11 +52,9 @@ export class Director {
 
     /* 判断小鸟是否撞击了地板和铅笔*/
     checkIfHit() {
-
         const birds = this.dataStore.get('birds');
         const land = this.dataStore.get('land');
         const pencils = this.dataStore.get('pencils');
-        const score = this.dataStore.get('score');
 
         /* 是否撞击地板
            看小鸟移动到的y坐标 - 小鸟的height 是否等于 land的y坐标
@@ -66,9 +64,7 @@ export class Director {
             return;
         }
 
-        /*
-           是否飞出屏幕顶部
-        */
+        /* 是否飞出屏幕顶部 */
         if (birds.birdsPositionY[0] <= 0) {
             this.isGameOver = true;
             return;
@@ -91,11 +87,34 @@ export class Director {
                 right: pencils[i].x + pencils[i].width
             }
 
-            if (Director.ifBirdsHitPencils(birdsBorder, currentPencilBorder)) {
+            if (this.ifBirdsHitPencils(birdsBorder, currentPencilBorder)) {
                 this.isGameOver = true;
                 return;
             }
         }
+    }
+
+    /* 小鸟是否撞击到铅笔 */
+     ifBirdsHitPencils(bird, pencil) {
+        let res = true;
+
+        /* 下面四个是安全区域 只要占了一个 就说明没有撞到 */
+        if (bird.top > pencil.bottom
+            || bird.bottom < pencil.top
+            || bird.right < pencil.left
+            || bird.left > pencil.right) {
+            res = false;
+        }
+
+        return res;
+    }
+
+    /* 更新分数 */
+    updateScore() {
+
+        const birds = this.dataStore.get('birds');
+        const pencils = this.dataStore.get('pencils');
+        const score = this.dataStore.get('score');
 
         /* 分数逻辑
          * 1- 越过铅笔 左侧超过右侧刷新的帧数很多
@@ -110,20 +129,6 @@ export class Director {
     }
 
 
-    static ifBirdsHitPencils(bird, pencil) {
-        let res = true;
-
-        /* 下面四个是安全区域 只要占了一个 就说明没有撞到 */
-        if (bird.top > pencil.bottom
-            || bird.bottom < pencil.top
-            || bird.right < pencil.left
-            || bird.left > pencil.right) {
-            res = false;
-        }
-
-        return res;
-    }
-
     birdsTouchEvent() {
         for (let i = 0; i <= 2; i++) {
             this.dataStore.get('birds').y[i]
@@ -135,6 +140,7 @@ export class Director {
 
     run() {
         this.checkIfHit(); // 判断有没有碰撞 并更新isGameOver的状态
+        this.updateScore(); // 更新分数
         let movingTimer; // 定时刷新器
 
         /* 画面不停地跟着浏览器的刷新速率被重绘 */
