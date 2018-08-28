@@ -12,15 +12,10 @@ export class Birds extends Sprite {
 
         // 将小鸟的三个形态进行剪裁 放在一个数组里进行维护
         // 1- 剪裁的起始位置
-        // 2- 小鸟高24 宽34，上下边距为10，左右间距为18，最左侧边距为9
+        // 2- 放置位置
 
         /* 小鸟的剪裁位置 */
-
-        this.clippingTopLeftX = [
-            25,
-            25 + 37 + 22,
-            25 + 37 + 22 + 37 + 30
-        ]
+        this.clippingTopLeftX = [25, 25 + 37 + 22, 25 + 37 + 22 + 37 + 30];
         this.clippingTopLeftY = [22, 22, 22];
         this.clippingBottomRightX = [37, 37, 37]; // 是根据前一个点的位置来相对定位的 而不是原点
         this.clippingBottomRightY = [32, 32, 32]
@@ -48,18 +43,18 @@ export class Birds extends Sprite {
         */
         this.y = [this.birdPositionY, this.birdPositionY, this.birdPositionY];
 
-        this.index = 0;
-        this.count = 0; // 循环小鸟的位数 0->1->2 三个状态 整数
-        this.flyingTime = 0;
+
+        this.count = 0; // 不停在上一个count+=speed来循环小鸟，
+        this.index = 0; // 第几个小鸟 count得到的结果的正整数版
+        this.flyingTime = 0;  // 时间越长 自由落体下落的速度和高度越大
     }
 
     draw() {
-        // 默认一秒钟刷新60次
+        // 一直在不停run不停draw小鸟 默认一秒钟刷新60次
         const speed = 0.2; // 切换三只小鸟的速度
         this.count = this.count + speed;
         this.count = this.count > 2 ? 0 : this.count; // 小鸟的index最多只可能是2，如果是2了就切回0的状态
-        this.index = Math.floor(this.count); // 四舍五入 减速器的作用
-        //console.log(this.index)
+        this.index = Math.floor(this.count); // 向下取整 减速器的作用
 
         const gravity = 0.98 / 2.4;
         const offsetUp = 30; // 向上偏移一下
@@ -84,8 +79,5 @@ export class Birds extends Sprite {
             this.birdsPositionX[this.index], this.birdsPositionY[this.index],
             this.birdsPositionWidth[this.index], this.birdsPositionHeight[this.index]
         )
-
     }
-
-
 }

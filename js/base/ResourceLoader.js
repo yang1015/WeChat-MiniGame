@@ -9,8 +9,8 @@ export class ResourceLoader {
 
     mapKeyToImageInstance() {
         for (let [key, value] of this.map.entries()) {
-            // const image = new Image(); // == wx.createImage();
-            const image = wx.createImage();
+
+            const image = wx.createImage(); // = const image = new Image();
             image.src = value;
             this.map.set(key, image); // 更新map键值对应。将原本的url替换成一个实体image
         }

@@ -6,7 +6,7 @@ export class Score {
         this.ctx = DataStore.getInstance().ctx;
         this.score = 0;
         // 因为canvas在不停刷新 所以要有一个额外变量来控制计分与否
-        this.isGraded = true;
+        this.isGraded = false; // 默认未被打过分
 
     }
 
