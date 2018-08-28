@@ -4,8 +4,7 @@ import {DataStore} from "../base/DataStore.js";
 
 export class Background extends Sprite {
     constructor() {
-
-        const image = Sprite.getImage('background');
+        let image = Sprite.getImage('bg');
         const canvas = DataStore.getInstance().canvas;
 
         /* super之上不可以使用类实例的方法 禁止this关键字; 但是可以直接用类去访问*/

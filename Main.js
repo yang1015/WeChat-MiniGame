@@ -3,12 +3,11 @@ import {Director} from "./js/Director.js";
 import {Background} from "./js/runtime/Background.js";
 import {DataStore} from "./js/base/DataStore.js";
 import {Land} from './js/runtime/Land.js';
-import {UpPencil} from "./js/runtime/UpPencil.js";
-import {DownPencil} from "./js/runtime/DownPencil.js";
 import {Birds} from "./js/player/Birds.js";
 import {StartButton} from "./js/player/StartButton.js";
 import {Score} from "./js/player/Score.js";
-import {ApiExample} from "./js/ApiExample.js";
+import {Mode} from './js/runtime/Mode.js';
+
 
 export class Main {
     constructor() {
@@ -51,20 +50,23 @@ export class Main {
         this.playBackgroundMusic(); // 新建音乐实例并播放
 
         this.init();
+
+       // console.log(this.dataStore.map);
     }
 
     /* 初始化 */
     init() {
+
         // 将bg放进dataStore的简直配对中 作为value的不是image实体
         // 而是直接将images实体拿去给background实例化了一遍，这样如果要draw 直接.draw()即可
-        this.director.isGameOver = false; // 放在这里才能点击屏幕重新开始
-        this.dataStore
-            .put('background',
-                // this.ctx, this.dataStore.res.get('background')
+        // this.director.isGameOver = false; // 放在这里才能点击屏幕重新开始
+        this.director.isGameOver = false; //
+        this.dataStore.put('bg', new Background())
+            // this.ctx, this.dataStore.res.get('background')
                 // 正确写法 new Background(this.ctx, this.dataStore.res.get('background'))
                 // 简化后 1- 全局都使用DataStore中的那个ctx ctx不再需要被传来传去
                 //       2- 在Background里定义好了要get的'background'这个key, 直接返回的就是image实例，不需要这里传入再去get了
-                new Background()) // 这里如果把put的value写成image实体，那么在Director那里操作的时候 还缺少Main这里的ctx
+               // 这里如果把put的value写成image实体，那么在Director那里操作的时候 还缺少Main这里的ctx
             .put('land', new Land())
             // .put('pencilUp', new UpPencil())
             // .put('pencilDown', new DownPencil())
@@ -87,22 +89,44 @@ export class Main {
         // 注册事件属于初始化 需要写在Main里
         // this.canvas.addEventListener('touchstart', e=>{});
         // wx.onTouchStart(e => { // 箭头函数 这样e指向的是Main类
-        wx.onTouchStart(() => {
+        wx.onTouchStart((res) => {
             if (this.director.isGameOver) {
-                // 游戏开始
+                // 游戏结束
                 this.init();
             } else {
-                // 游戏结束
-                this.director.birdsTouchEvent();
+                this.director.birdsTouchEvent();  // 游戏进行中
             }
-        })
+        });
+    }
+
+    checkMode(touch) {
+        // 一旦点击的坐标在下面的范围内 那么要销毁Mode
+        for (let [key, value] of this.dataStore.map.entries()) {
+            if (key == "mode") {
+                value = null;
+            }
+        }
+
+        let touchX = touch.screenX;
+        let touchY = touch.screenY;
+
+        if (touchX <= 200 && touchX >= 120 && touchY <= 550 && touchY >= 520) {
+            console.log("点击的是白天");
+            this.dataStore.mode = "dayBg";
+        }
+
+        if (touchX <= 350 && touchX >= 270 && touchY <= 550 && touchY >= 520) {
+            console.log("点击的是晚上");
+            this.dataStore.mode = "nightBg";
+        }
+
     }
 
     playBackgroundMusic() {
         const bgm = wx.createInnerAudioContext();
         bgm.autoplay = true;
         bgm.loop = true;
-        bgm.src = 'res/bgm2.mp3';
+        bgm.src = 'res/bgm.mp3';
         this.dataStore.put('bgm', bgm);
     }
 

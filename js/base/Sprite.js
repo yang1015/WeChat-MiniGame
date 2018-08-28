@@ -6,11 +6,9 @@ export class Sprite {
     constructor(img = null,
                 srcX = 0, srcY = 0, srcW = 0, srcH = 0,
                 x = 0, y = 0, width = 0, height = 0) { // ES6可以设置默认值
-        //console.log("sprite constructor");
 
         this.dataStore = DataStore.getInstance();
         this.ctx = this.dataStore.ctx;
-        // this.a777 = '777'
 
         this.img = img;
         this.srcX = srcX;

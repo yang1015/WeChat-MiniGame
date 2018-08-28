@@ -2,12 +2,12 @@
 // 暴露的是变量的引用 而非变量的值
 
 export const Resources = [
-    ['background', 'res/background.png'],
+    ['bg', 'res/blue.jpg'],
     ['land', 'res/land.png'],
     ['pencilUp', 'res/pu.png'],
     ['pencilDown', 'res/pd.png'],
-    ['birds', 'res/birds.png'],
-    ['startButton', 'res/start_button.png'],
+    ['birds', 'res/puppies.png'],
+    ['startButton', 'res/replay.png'],
 ];
 
 

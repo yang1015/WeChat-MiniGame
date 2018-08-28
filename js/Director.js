@@ -141,19 +141,22 @@ export class Director {
 
     run() {
 
+
         this.checkIfHit(); // 判断有没有碰撞 并更新isGameOver的状态
 
         let movingTimer; // 定时刷新器
 
         /* 画面不停地跟着浏览器的刷新速率被重绘 */
-        if (!this.isGameOver) { // 游戏没有结束
+       if (!this.isGameOver) { // 游戏没有结束
 
             this.dataStore.get('bgm').play(); // 开始播放或者继续播放
-            this.dataStore.get('background').draw();
+            this.dataStore.get("bg").draw();
+
             this.drawPencils();
             this.dataStore.get('land').draw();
             this.dataStore.get('score').draw();
             this.dataStore.get('birds').draw();
+
 
             /* this永远指向类，箭头函数
                requestAnimationFrame类似于setTimeout
@@ -178,7 +181,7 @@ export class Director {
             cancelAnimationFrame(this.dataStore.get('movingTimer')); // 当游戏暂停或者停止之后 需要cancel掉这个timer
             this.dataStore.destroy();
             wx.triggerGC(); // 垃圾回收
-            console.log("游戏结束")
+
         }
     }
 

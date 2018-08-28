@@ -1,5 +1,6 @@
 import {Sprite} from "../base/Sprite.js";
 import {DataStore} from "../base/DataStore.js";
+import {Director} from "../Director";
 
 export class Land extends Sprite {
     constructor() {
@@ -17,16 +18,21 @@ export class Land extends Sprite {
 
     draw() {
         // console.log(this.a777); 在子类里可以取用使用父类的变量
-        this.landX = this.landX + DataStore.getInstance().movingSpeed;;
-        if (this.landX >= (this.img.width - DataStore.getInstance().canvas.width)) { //右边即将达到canvas的边界
-            this.landX = 0;
-        }
 
-        super.draw(
-            this.image,
-            this.srcX, this.srcY, this.srcW, this.srcH,
-            -this.landX, this.y, this.width, this.height
-        );
-        // 从右往左移动 剪裁开始的位置要变化 递减
+
+            this.landX = this.landX + DataStore.getInstance().movingSpeed;;
+            if (this.landX >= (this.img.width - DataStore.getInstance().canvas.width)) { //右边即将达到canvas的边界
+                this.landX = 0;
+            }
+
+            super.draw(
+                this.image,
+                this.srcX, this.srcY, this.srcW, this.srcH,
+                -this.landX, this.y, this.width, this.height
+            );
+            // 从右往左移动 剪裁开始的位置要变化 递减
+
+
+
     }
 }
